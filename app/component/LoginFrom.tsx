@@ -20,6 +20,9 @@ const LoginForm = () => {
     formData.append("email", email);
     formData.append("password", password);
 
+   
+
+
     try {
       const res = await fetch("http://localhost:3000/api/users/login", {
         method: "POST",
@@ -30,14 +33,18 @@ const LoginForm = () => {
 
       if (res.ok) {
         Cookies.set("authToken", data.token, { expires: 7, secure: false });
-        Cookies.set("FromLogin", "vrai", {
-          expires: expirationInDays,
-          secure: false,
-        });
-        window.location.href = "/home";
+
+        if (data.firstLogin){
+          window.location.href = "/firstconnexion";
+        } else {
+          window.location.href = "/home";
+        }
       } else {
         setErrorMessage(data.error || "Une erreur est survenue");
       }
+
+      console.log(data);
+
     } catch (error) {
       console.error("Erreur réseau :", error);
       setErrorMessage("Connexion impossible au serveur.");
